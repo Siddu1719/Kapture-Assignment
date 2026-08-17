@@ -1,0 +1,244 @@
+{
+  "verify_customer": {
+    "description": "Verify the person answering the call using approved verification fields. Debt details must remain locked until verified=true.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "type": "string"
+        },
+        "verification_type": {
+          "type": "string",
+          "enum": [
+            "approved_identity_check"
+          ]
+        },
+        "verification_value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id",
+        "verification_type",
+        "verification_value"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "verified": {
+          "type": "boolean"
+        },
+        "reason_code": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "verified"
+      ]
+    }
+  },
+  "get_account_details": {
+    "description": "Retrieve account information only after the customer is verified.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "loan_type": {
+          "type": "string"
+        },
+        "overdue_amount": {
+          "type": "number"
+        },
+        "days_past_due": {
+          "type": "integer"
+        },
+        "account_status": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "loan_type",
+        "overdue_amount",
+        "days_past_due",
+        "account_status"
+      ]
+    }
+  },
+  "log_promise_to_pay": {
+    "description": "Record a confirmed payment commitment.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "ptp_date": {
+          "type": "string",
+          "description": "ISO date YYYY-MM-DD"
+        }
+      },
+      "required": [
+        "customer_id",
+        "amount",
+        "ptp_date"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "ptp_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "ptp_id",
+        "status"
+      ]
+    }
+  },
+  "send_payment_link": {
+    "description": "Trigger a mock or approved payment-link delivery.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "channel": {
+          "type": "string",
+          "enum": [
+            "sms",
+            "whatsapp"
+          ]
+        }
+      },
+      "required": [
+        "customer_id",
+        "amount",
+        "channel"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "link_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "link_id",
+        "status"
+      ]
+    }
+  },
+  "escalate_to_agent": {
+    "description": "Escalate cases outside the safe automated flow.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id",
+        "reason",
+        "summary"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "escalation_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "escalation_id",
+        "status"
+      ]
+    }
+  },
+  "mark_disposition": {
+    "description": "Record the final outcome of every call.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "call_id": {
+          "type": "string"
+        },
+        "disposition": {
+          "type": "string",
+          "enum": [
+            "PTP",
+            "HARDSHIP",
+            "DISPUTE",
+            "ALREADY_PAID",
+            "WRONG_PERSON",
+            "CALLBACK",
+            "HOSTILE",
+            "DNC",
+            "ESCALATED",
+            "FAILED_CONTACT",
+            "OTHER"
+          ]
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "call_id",
+        "disposition",
+        "summary"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "logged": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "logged",
+        "status"
+      ]
+    }
+  }
+}
